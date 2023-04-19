@@ -98,7 +98,7 @@ def perform_data(preday,postday) :
 
     pickup_report.columns = cols
     pickup_report = pickup_report.reorder_levels([0, 1], axis=1).sort_index(axis=1)
-
+    return pickup_report
 
 
 pickup_report = perform_data(preday,postday)
