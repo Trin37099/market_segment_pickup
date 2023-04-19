@@ -21,7 +21,8 @@ uploaded_files1 = st.file_uploader("Choose Hotel Amber Sukhumvit 85 today xlsx f
 for uploaded_file1 in uploaded_files1:
     postday = pd.read_excel(uploaded_files1,skiprows=[0, 2],thousands=',')
 
-preday1 = preday[['Unnamed: 0',
+def perform_data(preday,postday) :
+    preday1 = preday[['Unnamed: 0',
                   'OTA','Online Travel Agent', 'OTA.1'
                   , 'B2B','Travel Agent B2B', 'B2B.1'
                   , 'TA', 'Travel Agent', 'TA.1'
@@ -34,7 +35,7 @@ preday1 = preday[['Unnamed: 0',
                   ,'NON code', 'Other', 'NON code.1'
                   , 'Unnamed: 73', 'Total','Unnamed: 75']]
 
-postday1 = postday[['Unnamed: 0',
+    postday1 = postday[['Unnamed: 0',
                   'OTA','Online Travel Agent', 'OTA.1'
                   , 'B2B','Travel Agent B2B', 'B2B.1'
                   , 'TA', 'Travel Agent', 'TA.1'
@@ -47,8 +48,8 @@ postday1 = postday[['Unnamed: 0',
                   ,'NON code', 'Other', 'NON code.1'
                   , 'Unnamed: 73', 'Total','Unnamed: 75']]
 
-preday1 = preday1.drop(preday1[(preday1['Unnamed: 0'] == 'Total')].index)
-preday1 = preday1.rename(columns={'Unnamed: 0':'DATE'
+    preday1 = preday1.drop(preday1[(preday1['Unnamed: 0'] == 'Total')].index)
+    preday1 = preday1.rename(columns={'Unnamed: 0':'DATE'
                                   ,'OTA':'OTA_Rms','Online Travel Agent':'OTA_Rev','OTA.1':'OTA_Avg'
                                   ,"B2B":'B2B_Rms','Travel Agent B2B':'B2B_Rev','B2B.1':'B2B_Avg'
                                   ,'TA':'TA_Rms','Travel Agent':'TA_Rev','TA.1':'TA_Avg'
@@ -61,8 +62,8 @@ preday1 = preday1.rename(columns={'Unnamed: 0':'DATE'
                                   ,'NON code':'Noncode_Rms', 'Other':'Noncode_Rev', 'NON code.1':'Noncode_Avg'
                                   , 'Unnamed: 73':'Total_Rms', 'Total':'Total_Rev','Unnamed: 75':'Total_Avg'})
 
-postday1 = postday1.drop(postday1[(postday1['Unnamed: 0'] == 'Total')].index)
-postday1 = postday1.rename(columns={'Unnamed: 0':'DATE'
+    postday1 = postday1.drop(postday1[(postday1['Unnamed: 0'] == 'Total')].index)
+    postday1 = postday1.rename(columns={'Unnamed: 0':'DATE'
                                   ,'OTA':'OTA_Rms','Online Travel Agent':'OTA_Rev','OTA.1':'OTA_Avg'
                                   ,"B2B":'B2B_Rms','Travel Agent B2B':'B2B_Rev','B2B.1':'B2B_Avg'
                                   ,'TA':'TA_Rms','Travel Agent':'TA_Rev','TA.1':'TA_Avg'
@@ -75,15 +76,15 @@ postday1 = postday1.rename(columns={'Unnamed: 0':'DATE'
                                   ,'NON code':'Noncode_Rms', 'Other':'Noncode_Rev', 'NON code.1':'Noncode_Avg'
                                   , 'Unnamed: 73':'Total_Rms', 'Total':'Total_Rev','Unnamed: 75':'Total_Avg'})
 
-preday1['DATE']= pd.to_datetime(preday1['DATE'], format='%a %d/%m/%Y')
-postday1['DATE']= pd.to_datetime(postday1['DATE'], format='%a %d/%m/%Y')
+    preday1['DATE']= pd.to_datetime(preday1['DATE'], format='%a %d/%m/%Y')
+    postday1['DATE']= pd.to_datetime(postday1['DATE'], format='%a %d/%m/%Y')
 
-postday1= postday1.set_index('DATE')
-preday1= preday1.set_index('DATE')
+    postday1= postday1.set_index('DATE')
+    preday1= preday1.set_index('DATE')
 
-pickup_report = preday1.iloc[1:] - postday1.iloc[0:]
+    pickup_report = preday1.iloc[1:] - postday1.iloc[0:]
 
-cols = pd.MultiIndex.from_tuples([('OTA', 'Rms.'), ('OTA', 'Rev.'), ('OTA', 'Avg.')
+    cols = pd.MultiIndex.from_tuples([('OTA', 'Rms.'), ('OTA', 'Rev.'), ('OTA', 'Avg.')
                                                   , ('B2B', 'Rms.'), ('B2B', 'Rev.'), ('B2B', 'Avg.')
                                                   , ('TA', 'Rms.'), ('TA', 'Rev.'), ('TA', 'Avg.')
                                                   ,('CORP', 'Rms.'), ('CORP', 'Rev.'), ('CORP', 'Avg.')
@@ -95,8 +96,8 @@ cols = pd.MultiIndex.from_tuples([('OTA', 'Rms.'), ('OTA', 'Rev.'), ('OTA', 'Avg
                                                   ,('Noncode', 'Rms.'), ('Noncode', 'Rev.'), ('Noncode', 'Avg.')
                                                   ,('Total', 'Rms.'), ('Total', 'Rev.'), ('Total', 'Avg.')])
 
-pickup_report.columns = cols
-pickup_report = pickup_report.reorder_levels([0, 1], axis=1).sort_index(axis=1)
+    pickup_report.columns = cols
+    pickup_report = pickup_report.reorder_levels([0, 1], axis=1).sort_index(axis=1)
 
 
-st.write(pickup_report.to_html(),unsafe_allow_html=True)
+    st.write(pickup_report.to_html(),unsafe_allow_html=True)
