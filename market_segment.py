@@ -3,8 +3,8 @@ import streamlit as st
 import numpy as np
 from datetime import datetime
 from datetime import datetime, timedelta
-from openpyxl import load_workbook
 import openpyxl
+from openpyxl import load_workbook
 
 st.set_page_config(
     page_title="Market segment pickup",
