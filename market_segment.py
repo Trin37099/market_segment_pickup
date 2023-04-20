@@ -14,12 +14,12 @@ st.title('Market segment Report')
 st.subheader('Please Upload Market segment Hotel Amber Sukhumvit 85 yesterder xlsx Files')
 uploaded_files = st.file_uploader("Choose Hotel Amber Sukhumvit 85 yesterder xlsx file",type = 'xlsx', accept_multiple_files=True)
 for uploaded_file in uploaded_files:
-    preday = pd.read_csv(uploaded_files,skiprows=[0, 2],thousands=',')
+    preday = pd.read_excel(uploaded_files,skiprows=[0, 2],thousands=',')
     
 st.subheader('Please Upload Market segment Hotel Amber Sukhumvit 85 today xlsx Files')
 uploaded_files1 = st.file_uploader("Choose Hotel Amber Sukhumvit 85 today xlsx file",type = 'xlsx', accept_multiple_files=True)
 for uploaded_file1 in uploaded_files1:
-    postday = pd.read_csv(uploaded_files1,skiprows=[0, 2],thousands=',')
+    postday = pd.read_excel(uploaded_files1,skiprows=[0, 2],thousands=',')
 
 def perform_data(preday,postday) :
     preday1 = preday[['Unnamed: 0',
