@@ -3,8 +3,6 @@ import streamlit as st
 import numpy as np
 from datetime import datetime
 from datetime import datetime, timedelta
-from openpyxl import load_workbook
-import openpyxl
 
 st.set_page_config(
     page_title="Market segment pickup",
@@ -17,7 +15,7 @@ fileList = []
 st.subheader('Please Upload Excel Files')
 uploaded_files = st.file_uploader("Choose a XLSX file",type = 'xlsx', accept_multiple_files=True)
 for uploaded_file in uploaded_files:
-    df = pd.read_excel(uploaded_file, engine = 'openpyxl',skiprows=[0, 2],thousands=',')
+    df = pd.read_excel(uploaded_file,skiprows=[0, 2],thousands=',')
  
     fileList.append(df)
 def perform_data(fileList) :
