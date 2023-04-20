@@ -3,6 +3,8 @@ import streamlit as st
 import numpy as np
 from datetime import datetime
 from datetime import datetime, timedelta
+from openpyxl import load_workbook
+import openpyxl
 
 st.set_page_config(
     page_title="Market segment pickup",
@@ -10,18 +12,16 @@ st.set_page_config(
 )
 st.title('Market segment Report')
 
-#----------------------------------------------------------------------------------------------------------------
-st.subheader('Please Upload Market segment Hotel Amber Sukhumvit 85 yesterder xlsx Files')
-uploaded_files = st.file_uploader("Choose Hotel Amber Sukhumvit 85 yesterder xlsx file",type = 'xlsx', accept_multiple_files=True)
-for uploaded_file in uploaded_files:
-    preday = pd.read_excel(uploaded_files,skiprows=[0, 2],thousands=',')
-    
-st.subheader('Please Upload Market segment Hotel Amber Sukhumvit 85 today xlsx Files')
-uploaded_files1 = st.file_uploader("Choose Hotel Amber Sukhumvit 85 today xlsx file",type = 'xlsx', accept_multiple_files=True)
-for uploaded_file1 in uploaded_files1:
-    postday = pd.read_excel(uploaded_files1,skiprows=[0, 2],thousands=',')
 
-def perform_data(preday,postday) :
+fileList = []
+st.subheader('Please Upload Excel Files')
+uploaded_files = st.file_uploader("Choose a XLSX file",type = 'xlsx', accept_multiple_files=True)
+for uploaded_file in uploaded_files:
+    df = pd.read_excel(uploaded_file, engine = 'openpyxl',skiprows=[0, 2],thousands=',')
+ 
+    fileList.append(df)
+def perform_data(fileList) :
+    preday = fileList[1]
     preday1 = preday[['Unnamed: 0',
                   'OTA','Online Travel Agent', 'OTA.1'
                   , 'B2B','Travel Agent B2B', 'B2B.1'
@@ -34,7 +34,7 @@ def perform_data(preday,postday) :
                   , 'COM', 'Complimentary','COM.1'
                   ,'NON code', 'Other', 'NON code.1'
                   , 'Unnamed: 73', 'Total','Unnamed: 75']]
-
+    postday = fileList[0]
     postday1 = postday[['Unnamed: 0',
                   'OTA','Online Travel Agent', 'OTA.1'
                   , 'B2B','Travel Agent B2B', 'B2B.1'
@@ -82,7 +82,56 @@ def perform_data(preday,postday) :
     postday1= postday1.set_index('DATE')
     preday1= preday1.set_index('DATE')
 
-    pickup_report = preday1.iloc[1:] - postday1.iloc[0:]
+    df = pd.merge(preday1, postday1, on='DATE', suffixes=('_pre', '_post'))
+    prefixs =['OTA_Rms'
+                ,'OTA_Rev'
+                ,'OTA_Avg'
+                ,'B2B_Rms'
+                ,'B2B_Rev'
+                ,'B2B_Avg'
+                ,'TA_Rms'
+                ,'TA_Rev'
+                ,'TA_Avg'
+                ,'CORP_Rms'
+                ,'CORP_Rev'
+                ,'CORP_Avg'
+                ,'WIN_Rms'
+                ,'WIN_Rev'
+                ,'WIN_Avg'
+                ,'HWS_Rms'
+                ,'HWS_Rev'
+                ,'HWS_Avg'
+                ,'FIT_Rms'
+                ,'FIT_Rev'
+                ,'FIT_Avg'
+                ,'GOV_Rms'
+                ,'GOV_Rev'
+                ,'GOV_Avg'
+                ,'COM_Rms'
+                ,'COM_Rev'
+                ,'COM_Avg'
+                ,'Noncode_Rms'
+                ,'Noncode_Rev'
+                ,'Noncode_Avg'
+                ,'Total_Rms'
+                ,'Total_Rev'
+                ,'Total_Avg']
+    for prefix in prefixs:
+        pre_col = prefix + '_pre'
+        post_col = prefix + '_post'
+        diff_col = prefix + '_pickup'
+        df[diff_col] = df[post_col] - df[pre_col]
+    
+    pickup_report = df[['OTA_Rms_pickup', 'OTA_Rev_pickup',
+       'OTA_Avg_pickup', 'B2B_Rms_pickup', 'B2B_Rev_pickup', 'B2B_Avg_pickup',
+       'TA_Rms_pickup', 'TA_Rev_pickup', 'TA_Avg_pickup', 'CORP_Rms_pickup',
+       'CORP_Rev_pickup', 'CORP_Avg_pickup', 'WIN_Rms_pickup',
+       'WIN_Rev_pickup', 'WIN_Avg_pickup', 'HWS_Rms_pickup', 'HWS_Rev_pickup',
+       'HWS_Avg_pickup', 'FIT_Rms_pickup', 'FIT_Rev_pickup', 'FIT_Avg_pickup',
+       'GOV_Rms_pickup', 'GOV_Rev_pickup', 'GOV_Avg_pickup', 'COM_Rms_pickup',
+       'COM_Rev_pickup', 'COM_Avg_pickup', 'Noncode_Rms_pickup',
+       'Noncode_Rev_pickup', 'Noncode_Avg_pickup', 'Total_Rms_pickup',
+       'Total_Rev_pickup', 'Total_Avg_pickup']]
 
     cols = pd.MultiIndex.from_tuples([('OTA', 'Rms.'), ('OTA', 'Rev.'), ('OTA', 'Avg.')
                                                   , ('B2B', 'Rms.'), ('B2B', 'Rev.'), ('B2B', 'Avg.')
@@ -97,9 +146,10 @@ def perform_data(preday,postday) :
                                                   ,('Total', 'Rms.'), ('Total', 'Rev.'), ('Total', 'Avg.')])
 
     pickup_report.columns = cols
-    pickup_report = pickup_report.reorder_levels([0, 1], axis=1).sort_index(axis=1)
+    pickup_report = pickup_report.reorder_levels([0, 1], axis=1)
     return pickup_report
 
 
-pickup_report = perform_data(preday,postday)
+pickup_report = perform_data(fileList)
+st.markdown('Amber 85 by market segment')
 st.write(pickup_report.to_html(),unsafe_allow_html=True)
