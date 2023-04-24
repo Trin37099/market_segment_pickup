@@ -7,7 +7,8 @@ from openpyxl import load_workbook
 import matplotlib.pyplot as plt
 import seaborn as sns
 import openpyxl
-
+import warnings
+warnings.filterwarnings('ignore')
 
 st.set_page_config(
     page_title="Market segment pickup",
@@ -197,21 +198,23 @@ if selected_options == 'pickup report the grass':
         filtered_df = filtered_df.loc[:, filtered_df.columns.str.endswith('_Rev_pickup')]
     elif filter_type == 'Avg':
         filtered_df = filtered_df.loc[:, filtered_df.columns.str.endswith('_Avg_pickup')]
+    filtered_df = filtered_df.fillna(0)
 
     selected_day = st.sidebar.multiselect('Select day(s) of the week', dayname)
     if selected_day:
         filtered_df_d = filtered_df[filtered_df.index.strftime('%A').isin(selected_day)]
-        #plus = pd.DataFrame(np.where(filtered_df_d > 0, 
-                                # '+' + filtered_df_d.astype(str), filtered_df_d)
-                                # , index=filtered_df_d.index, columns=filtered_df_d.columns)
-        #st.write(plus)
-        st.write(filtered_df_d)
+        plus = pd.DataFrame(np.where(filtered_df_d > 0, 
+                                 '+' + filtered_df_d.astype(str), filtered_df_d)
+                                 , index=filtered_df_d.index, columns=filtered_df_d.columns)
+        st.write(plus)
+        #st.write(filtered_df_d)
         st.bar_chart(filtered_df_d)
     else:
-        #plus = pd.DataFrame(np.where(filtered_df > 0
-                                # , '+' + filtered_df.astype(str), filtered_df)
-                                # , index=filtered_df.index, columns=filtered_df.columns)
-        st.write(filtered_df)
+        plus = pd.DataFrame(np.where(filtered_df > 0
+                                 , '+' + filtered_df.astype(str), filtered_df)
+                                 , index=filtered_df.index, columns=filtered_df.columns)
+        st.write(plus)
+        #st.write(filtered_df)
         st.bar_chart(filtered_df)
 #----------------------------------------------------------------------------------------
 elif selected_options == 'pickup report arb':
@@ -227,11 +230,11 @@ elif selected_options == 'pickup report arb':
         filtered_df = filtered_df.loc[:, filtered_df.columns.str.endswith('_Rev_pickup')]
     elif filter_type == 'Avg':
         filtered_df = filtered_df.loc[:, filtered_df.columns.str.endswith('_Avg_pickup')]
+    filtered_df = filtered_df.fillna(0)
 
     selected_day = st.sidebar.multiselect('Select day(s) of the week', dayname)
     if selected_day:
         filtered_df_d = filtered_df[filtered_df.index.strftime('%A').isin(selected_day)]
-        filtered_df_d = filtered_df_d.fillna(0)
         plus = pd.DataFrame(np.where(filtered_df_d > 0, 
                                  '+' + filtered_df_d.astype(str), filtered_df_d)
                                  , index=filtered_df_d.index, columns=filtered_df_d.columns)
@@ -258,11 +261,11 @@ elif selected_options == 'pickup report alt':
         filtered_df = filtered_df.loc[:, filtered_df.columns.str.endswith('_Rev_pickup')]
     elif filter_type == 'Avg':
         filtered_df = filtered_df.loc[:, filtered_df.columns.str.endswith('_Avg_pickup')]
+    filtered_df = filtered_df.fillna(0)
 
     selected_day = st.sidebar.multiselect('Select day(s) of the week', dayname)
     if selected_day:
         filtered_df_d = filtered_df[filtered_df.index.strftime('%A').isin(selected_day)]
-        filtered_df_d = filtered_df_d.fillna(0)
         plus = pd.DataFrame(np.where(filtered_df_d > 0, 
                                  '+' + filtered_df_d.astype(str), filtered_df_d)
                                  , index=filtered_df_d.index, columns=filtered_df_d.columns)
@@ -289,12 +292,11 @@ elif selected_options == 'pickup report as':
         filtered_df = filtered_df.loc[:, filtered_df.columns.str.endswith('_Rev_pickup')]
     elif filter_type == 'Avg':
         filtered_df = filtered_df.loc[:, filtered_df.columns.str.endswith('_Avg_pickup')]
-
+    filtered_df = filtered_df.fillna(0)
 
     selected_day = st.sidebar.multiselect('Select day(s) of the week', dayname)
     if selected_day:
         filtered_df_d = filtered_df[filtered_df.index.strftime('%A').isin(selected_day)]
-        filtered_df_d = filtered_df_d.fillna(0)
         plus = pd.DataFrame(np.where(filtered_df_d > 0, 
                                  '+' + filtered_df_d.astype(str), filtered_df_d)
                                  , index=filtered_df_d.index, columns=filtered_df_d.columns)
@@ -321,11 +323,11 @@ elif selected_options == 'pickup report amp':
         filtered_df = filtered_df.loc[:, filtered_df.columns.str.endswith('_Rev_pickup')]
     elif filter_type == 'Avg':
         filtered_df = filtered_df.loc[:, filtered_df.columns.str.endswith('_Avg_pickup')]
+    filtered_df = filtered_df.fillna(0)
 
     selected_day = st.sidebar.multiselect('Select day(s) of the week', dayname)
     if selected_day:
         filtered_df_d = filtered_df[filtered_df.index.strftime('%A').isin(selected_day)]
-        filtered_df_d = filtered_df_d.fillna(0)
         plus = pd.DataFrame(np.where(filtered_df_d > 0, 
                                  '+' + filtered_df_d.astype(str), filtered_df_d)
                                  , index=filtered_df_d.index, columns=filtered_df_d.columns)
@@ -352,11 +354,11 @@ elif selected_options == 'pickup report ard':
         filtered_df = filtered_df.loc[:, filtered_df.columns.str.endswith('_Rev_pickup')]
     elif filter_type == 'Avg':
         filtered_df = filtered_df.loc[:, filtered_df.columns.str.endswith('_Avg_pickup')]
+    filtered_df = filtered_df.fillna(0)
 
     selected_day = st.sidebar.multiselect('Select day(s) of the week', dayname)
     if selected_day:
         filtered_df_d = filtered_df[filtered_df.index.strftime('%A').isin(selected_day)]
-        filtered_df_d = filtered_df_d.fillna(0)
         plus = pd.DataFrame(np.where(filtered_df_d > 0, 
                                  '+' + filtered_df_d.astype(str), filtered_df_d)
                                  , index=filtered_df_d.index, columns=filtered_df_d.columns)
@@ -383,11 +385,11 @@ elif selected_options == 'pickup report amber':
         filtered_df = filtered_df.loc[:, filtered_df.columns.str.endswith('_Rev_pickup')]
     elif filter_type == 'Avg':
         filtered_df = filtered_df.loc[:, filtered_df.columns.str.endswith('_Avg_pickup')]
+    filtered_df = filtered_df.fillna(0)
 
     selected_day = st.sidebar.multiselect('Select day(s) of the week', dayname)
     if selected_day:
         filtered_df_d = filtered_df[filtered_df.index.strftime('%A').isin(selected_day)]
-        filtered_df_d = filtered_df_d.fillna(0)
         plus = pd.DataFrame(np.where(filtered_df_d > 0, 
                                  '+' + filtered_df_d.astype(str), filtered_df_d)
                                  , index=filtered_df_d.index, columns=filtered_df_d.columns)
